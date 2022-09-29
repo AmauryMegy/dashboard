@@ -1,0 +1,65 @@
+<mat-card class="text-center mx-5">
+  <h1>La Nîmes'alerie</h1>
+
+<!-- Vue d'ensemble -->
+  <div class="my-4">
+    <a >Vue d'ensemble</a>
+  </div>
+
+<hr>
+
+<!-- Catégorie -->
+  <div class="my-4">
+    <div class="mt-3">
+      <a >Vente</a>
+    </div>
+    <div class="mt-3">
+      <a >Commande</a>
+    </div>
+    <div class="mt-3">
+      <a >Panier</a>
+    </div>
+    <div class="mt-3">
+      <a >Utilisateur</a>
+    </div>
+  </div>
+
+<hr>
+
+<!-- Profil + deconnexion -->
+  <div class="my-4">
+    <div>Mr Capard</div>
+    <a >Se déconnecter</a>
+  </div>
+</mat-card>
+
+
+<div *ngIf="!firstStats">Chargement en cours</div>
+
+<div *ngIf="firstStats" class="row justify-content-center">
+  <div class="card col-3">
+    <div class="card-body">
+      <h2>Montant des ventes</h2>
+      {{firstStats.montantVenteTotal}}
+    </div>
+  </div>
+
+  <div class="card col-3 mx-4">
+    <div class="card-body">
+      <h2>Nombre de commande</h2>
+      {{firstStats.nbCommand}}
+    </div>
+  </div>
+
+  <div class="card col-3">
+    <div class="card-body">
+      <h2>Nombre de panier</h2>
+      {{firstStats.nbPanier}}
+    </div>
+  </div>
+
+  <ngx-charts-pie-grid 
+  [results]="saleData" >
+</ngx-charts-pie-grid>
+
+</div>
