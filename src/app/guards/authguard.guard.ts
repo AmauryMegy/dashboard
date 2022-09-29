@@ -6,20 +6,20 @@ import { AuthService } from '../services/auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuardGuard implements CanActivate {
+export class AuthguardGuard implements CanActivate {
 
-  constructor(private authService : AuthService, private router: Router) {
-
-  }
-
+  constructor(private authService : AuthService, private router : Router){}
+  
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if(!this.authService.isLoggedIn) {
-      this.router.navigate(['/']);
-      window.alert("Accès non autorisé, connectez-vous");
-    }
-      return true;
+      if(this.authService.isLoggedIn !== true){
+        window.alert('Tu n\'as rien à faire ici !'),
+        this.router.navigate(['/']);
+        return false;
+      } else {
+        return true;
+      };
   }
-
+  
 }

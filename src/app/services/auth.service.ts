@@ -1,26 +1,32 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../models/user';
-import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-import jwt_decode from 'jwt-decode';
-import * as moment from 'moment'
+import { environment } from 'src/environments/environment';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  apiUrl = environment.api;
+  loginUrl = environment.api;
+  headers = new HttpHeaders().set('Content-Type', 'application/json');
 
-  constructor( private router : Router, private toastr: ToastrService, private httpClient : HttpClient) { }
+  constructor(private httpClient : HttpClient, private router : Router) { }
 
-  signIn(user: User):Observable<any> {
-    if(localStorage.getItem('access_token')){
-      localStorage.removeItem('access_token');
-    }
-    return this.httpClient.post<any>(this.apiUrl + 'authentication_token', user);
+  signIn(user: User) {
+    return this.httpClient
+      .post<any>(this.loginUrl + `authentication_token`, user)
+      .subscribe((res: any) => {
+        localStorage.setItem('access_token', res.token);
+        this.router.navigate(['/dashboard/accueil']); 
+
+      });
+  }
+
+  get isLoggedIn(): boolean {
+    let authToken = localStorage.getItem('access_token');
+    return authToken !== null ? true : false;
   }
 
   getToken() {
@@ -34,18 +40,7 @@ export class AuthService {
     }
   }
 
-  get isLoggedIn(): boolean {
-    let token = localStorage.getItem('access_token');
-    if (token) {
-      if(jwt_decode<any>(token).exp < moment().unix()){
-        this.toastr.error('Votre session a expiré, veuillez vous reconnecter');
-        localStorage.removeItem('access_token');
-        this.router.navigate(['/']);
-        return false
-      }
-      return true
-    } else {
-      return false
-    }
+  register(user:User):Observable<User>{
+    return this.httpClient.post<User>(this.loginUrl + 'register', user);
   }
 }
